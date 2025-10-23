@@ -20,7 +20,11 @@ vim.opt.completeopt = { "menu", "menuone", "noselect" }
 
 vim.o.termguicolors = true
 
-
+vim.filetype.add({
+  extension = {
+    xaml = "xml",
+  },
+})
 
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
@@ -32,7 +36,23 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
-vim.diagnostic.config({ virtual_text = true })
+vim.b.completion = false
+vim.lsp.inlay_hint.enable()
+vim.diagnostic.config ({
+    signs = true,
+    underline = true,
+    virtual_text = true,
+    virtual_lines = false,
+    update_in_insert = true,
+    float = {
+      header = "",
+      border = 'rounded',
+      focusable = true,
+    }
+  }
+)
+
+require("keybindings").global()
 
 -- Load LSPs
 require("lsp")

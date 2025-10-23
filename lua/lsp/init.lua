@@ -7,14 +7,11 @@ for _, file in ipairs(vim.fn.readdir(lsp_dir)) do
 end
 
 -- Enable LSPs
-vim.lsp.enable({'basedpyright', 'roslyn_ls', 'lua_ls'})
+vim.lsp.enable({'basedpyright', 'ruff', 'roslyn_ls', 'lua_ls'})
 
 -- Enable Auto Completion
 vim.api.nvim_create_autocmd('LspAttach', {
   callback = function(ev)
-    local client = vim.lsp.get_client_by_id(ev.data.client_id)
-    if client:supports_method('textDocument/completion') then
-      vim.lsp.completion.enable(true, client.id, ev.buf, { autotrigger = true })
-    end
+      require("keybindings").lsp(ev.buf)
   end,
 })
