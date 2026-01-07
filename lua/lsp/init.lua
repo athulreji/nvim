@@ -7,7 +7,7 @@ for _, file in ipairs(vim.fn.readdir(lsp_dir)) do
 end
 
 -- Enable LSPs
-vim.lsp.enable({'basedpyright', 'ruff', 'roslyn_ls', 'lua_ls'})
+vim.lsp.enable({'basedpyright', 'ruff', 'roslyn_ls', 'lua_ls', 'rust_analyzer'})
 
 -- Enable Auto Completion
 vim.api.nvim_create_autocmd('LspAttach', {

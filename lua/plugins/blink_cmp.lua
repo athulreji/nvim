@@ -9,7 +9,6 @@ return {
     completion = {
       menu = { border = 'rounded' },
       documentation = {
-        enabled = true,
         auto_show = true,
         window = { border = 'rounded' }
       }

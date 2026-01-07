@@ -4,4 +4,4 @@ return {
       config = function()
           require('../keybindings').telescope()
       end,
-    }
+}
