@@ -1,24 +1,18 @@
--- Set leader key to <Space>
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
-
--- Essential Neovim settings
-vim.opt.encoding = "utf-8"
-vim.opt.fileencoding = "utf-8"
 vim.opt.number = true
 vim.opt.relativenumber = true
-vim.opt.tabstop = 4
-vim.opt.softtabstop = 4
-vim.opt.shiftwidth = 4
-vim.opt.expandtab = true
-vim.opt.ignorecase = true
-vim.opt.smartcase = true
-vim.opt.incsearch = true
-vim.opt.clipboard = "unnamedplus"
-vim.opt.completeopt = { "menu", "menuone", "noselect" }
 
-vim.o.termguicolors = true
+vim.opt.signcolumn = "yes"
+
+vim.opt.tabstop = 2
+vim.opt.shiftwidth = 2
+vim.opt.expandtab = true
+vim.opt.textwidth = 80
+vim.opt.termguicolors = true
+
+vim.opt.clipboard = "unnamedplus"
 
 vim.filetype.add({
   extension = {
@@ -26,36 +20,70 @@ vim.filetype.add({
   },
 })
 
-local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-if not vim.loop.fs_stat(lazypath) then
-  vim.fn.system({
-    "git", "clone", "--filter=blob:none",
-    "https://github.com/folke/lazy.nvim.git",
-    lazypath,
-  })
-end
-vim.opt.rtp:prepend(lazypath)
+vim.diagnostic.config({ virtual_text = true })
 
-vim.b.completion = false
-vim.lsp.inlay_hint.enable()
-vim.diagnostic.config ({
-    signs = true,
-    underline = true,
-    virtual_text = true,
-    virtual_lines = false,
-    update_in_insert = true,
-    float = {
-      header = "",
-      border = 'rounded',
-      focusable = true,
+vim.pack.add({
+  "https://github.com/rebelot/kanagawa.nvim",
+  "https://github.com/nvim-treesitter/nvim-treesitter",
+  "https://github.com/saghen/blink.cmp",
+  "https://github.com/saghen/blink.lib",
+  "https://github.com/neovim/nvim-lspconfig",
+  "https://github.com/mason-org/mason.nvim",
+  "https://github.com/seblyng/roslyn.nvim",
+  "https://github.com/nvim-telescope/telescope.nvim",
+  "https://github.com/nvim-telescope/telescope-fzf-native.nvim",
+  "https://github.com/nvim-lua/plenary.nvim",
+  "https://github.com/stevearc/oil.nvim",
+  "https://github.com/nvim-tree/nvim-web-devicons",
+  "https://github.com/nvim-lualine/lualine.nvim",
+  "https://github.com/lewis6991/gitsigns.nvim",
+  "https://github.com/tpope/vim-fugitive",
+  "https://github.com/folke/which-key.nvim",
+}, { confirm = false })
+
+require("kanagawa").setup({
+  transparent = true,
+  colors = {
+    theme = {
+        all = {
+            ui = { bg_gutter = "none"
+            }
+        }
     }
   }
-)
+})
+
+vim.cmd.colorscheme("kanagawa")
+
+require("lualine").setup()
+
+require("nvim-treesitter.install").install{"fish", "c_sharp", "c", "cpp", "python", "rust", "make", "xml"}
+
+require("blink.cmp").setup({ fuzzy = { implementation = "lua" } })
+
+require("mason").setup()
+
+require("oil").setup()
+
+require("telescope").setup()
 
 require("keybindings").global()
 
--- Load LSPs
-require("lsp")
+require("keybindings").telescope()
 
--- Load plugin specs from lua/plugins/
-require("lazy").setup("plugins")
+require("keybindings").lsp()
+
+vim.lsp.config('lua_ls', {
+  settings = {
+    Lua = {
+      diagnostics = {
+        globals = { 'vim' },
+      },
+      workspace = {
+        library = vim.api.nvim_get_runtime_file("", true),
+      },
+    },
+  },
+})
+
+vim.lsp.enable({"clangd", "lua_ls"})

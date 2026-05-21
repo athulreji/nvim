@@ -33,7 +33,6 @@ function M.telescope()
   map('n', '<leader>ff', builtin.find_files, 'Find files')
   map('n', '<leader>fg', builtin.live_grep, 'Live grep')
   map('n', '<leader>fb', builtin.buffers, 'Find buffers')
-  map('n', '<leader>fh', builtin.help_tags, 'Help tags')
   map('n', '<leader>fr', builtin.resume, 'Resume Find')
 end
 
@@ -51,7 +50,7 @@ function M.lsp(bufnr)
   map('n', 'grs', builtin.lsp_document_symbols, "Document symbols", opts)
   map('n', 'grD', vim.lsp.buf.declaration, "Go to declaration", opts)
   map('n', 'grx', function() builtin.diagnostics({ bufnr = 0 }) end, "Show buffer diagnostics", opts)
-  map('n', '<space>lr', function () vim.cmd("LspRestart") end, "Restart LSP server")
+  map('n', '<space>lr', function () vim.cmd("lsp restart") end, "Restart LSP server")
 
 end
 
