@@ -12,6 +12,20 @@ vim.opt.expandtab = true
 vim.opt.textwidth = 80
 vim.opt.termguicolors = true
 
+-- Explicitly use win32yank.exe (WSL2) — prevents OSC 52 sequences from
+-- leaking into the terminal/tmux buffer when switching windows.
+vim.g.clipboard = {
+  name = "win32yank",
+  copy = {
+    ["+"] = { "win32yank.exe", "-i", "--crlf" },
+    ["*"] = { "win32yank.exe", "-i", "--crlf" },
+  },
+  paste = {
+    ["+"] = { "win32yank.exe", "-o", "--lf" },
+    ["*"] = { "win32yank.exe", "-o", "--lf" },
+  },
+  cache_enabled = true,
+}
 vim.opt.clipboard = "unnamedplus"
 
 vim.filetype.add({
@@ -30,8 +44,7 @@ vim.pack.add({
   "https://github.com/neovim/nvim-lspconfig",
   "https://github.com/mason-org/mason.nvim",
   "https://github.com/seblyng/roslyn.nvim",
-  "https://github.com/nvim-telescope/telescope.nvim",
-  "https://github.com/nvim-telescope/telescope-fzf-native.nvim",
+  "https://github.com/ibhagwan/fzf-lua",
   "https://github.com/nvim-lua/plenary.nvim",
   "https://github.com/stevearc/oil.nvim",
   "https://github.com/nvim-tree/nvim-web-devicons",
@@ -39,6 +52,7 @@ vim.pack.add({
   "https://github.com/lewis6991/gitsigns.nvim",
   "https://github.com/tpope/vim-fugitive",
   "https://github.com/folke/which-key.nvim",
+  'https://github.com/MeanderingProgrammer/render-markdown.nvim',
 }, { confirm = false })
 
 require("kanagawa").setup({
@@ -57,7 +71,7 @@ vim.cmd.colorscheme("kanagawa")
 
 require("lualine").setup()
 
-require("nvim-treesitter.install").install{"fish", "c_sharp", "c", "cpp", "python", "rust", "make", "xml"}
+require("nvim-treesitter.install").install{"fish", "c_sharp", "c", "cpp", "python", "rust", "make", "xml", "markdown"}
 
 require("blink.cmp").setup({ fuzzy = { implementation = "lua" } })
 
@@ -65,11 +79,15 @@ require("mason").setup()
 
 require("oil").setup()
 
-require("telescope").setup()
+require('render-markdown').setup({
+    completions = { lsp = { enabled = true } },
+})
+
+require("fzf-lua").setup()
 
 require("keybindings").global()
 
-require("keybindings").telescope()
+require("keybindings").fzf()
 
 require("keybindings").lsp()
 
